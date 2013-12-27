@@ -1,1 +1,11 @@
-<p>Hello Word, pienso. BTW, {{user_id}} and {{cycle_number}}</p>
+<p>Debug: User ID: {{user_id}}, Cycle Number: {{cycle_number}}.</p>
+<button ng-click="goToPreviousCycle()">Previous</button>
+<button ng-click="goToNextCycle()">Next</button>
+<hr />
+<ul class="courses">
+  <li ng-repeat="course in overall_courses"><a href="" ng-click="viewDetailed(course.id)">{{course.name}}</a>: {{course.average}}</li>
+</ul>
+<hr />
+<code>
+{{course_data | json}}
+</code>
