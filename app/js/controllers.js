@@ -4,25 +4,19 @@
 
 angular.module('myApp.controllers', []).
   controller('LoginController', ['$scope', 'GradeService', '$location', function($scope, GradeService, $location) {
-    $scope.district_mapping = { 'RRISD': Districts.roundrock, 'AISD': Districts.austin };
-    $scope.districts = ['RRISD' , 'AISD'];
+    $scope.district_mapping = { 'Round Rock ISD': 'roundrock', 'Austin ISD': 'austin' };
+    $scope.districts = ['Round Rock ISD' , 'Austin ISD'];
     $scope.message = "";
     $scope.submit = function() {
-      var username = this.username;
-      var password = this.password;
+      var district_information = Districts[this.district_mapping[this.district]];
       var id = this.id;
-      var district_information = this.district_mapping[this.district];
-      GradeRetriever.login(district_information, username, password, id, function() {
-        GradeRetriever.getAverages(district_information, function(data) {
-          var gradeData = GradeParser.parseAverages(district_information, data);
-          GradeService.setOriginalGrades(id, gradeData);
-          GradeService.setUserInformation(id, 'district', district_information); // zees is not good todo bug fixme, doesn't preserve the methods??!!
-          GradeService.setUserInformation(id, 'id', id);
-          GradeService.setUserInformation(id, 'username', username);
-          GradeService.setUserInformation(id, 'password', password);
-          $location.path("/user/" + id + "/cycle/3");
-          $scope.$apply();
-        });
+      GradeService.setUserInformation(id, 'district', this.district_mapping[this.district]); // zees is not good todo bug fixme, doesn't preserve the methods??!!
+      GradeService.setUserInformation(id, 'id', id);
+      GradeService.setUserInformation(id, 'username', this.username);
+      GradeService.setUserInformation(id, 'password', this.password);
+      GradeService.login(id, district_information, function() {
+        $location.path("/user/" + id + "/cycle/3");
+        $scope.$apply();
       }, function() {
         $scope.message = "Failed to log in. Check your username/password.";
         $scope.$apply();
@@ -45,7 +39,7 @@ angular.module('myApp.controllers', []).
 
     $scope.viewDetailed = function(course_id) {
       GradeService.getInformationSpecificCycleCourse($scope.user_id, course_id, $scope.cycle_number, function(data) {
-        $scope.course_data = data; // incomplete fixme
+        $scope.course_data = data;
         $scope.$apply();
       });
     };

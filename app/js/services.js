@@ -9,6 +9,22 @@ angular.module('myApp.services', []).
   factory('GradeService', function() {
     var GradeService = {};
 
+    GradeService.login = function(id, district, success, fail) { // FIXME clarify which district. or make it work with both
+      var userInformation = GradeService.getUserInformation(id);
+      var id = id;
+      var username = userInformation.username;
+      var password = userInformation.password;
+      var district = district;
+
+      GradeRetriever.login(district, username, password, id, function() {
+        GradeRetriever.getAverages(district, function(data) {
+          var gradeData = GradeParser.parseAverages(district, data);
+          GradeService.setOriginalGrades(id, gradeData);
+          success();
+        });
+      });
+    };
+
     GradeService.setUserInformation = function(id, key, value) {
       var users = store.get('qhac-users') || {};
       var info = GradeService.getUserInformation(id);
@@ -28,8 +44,6 @@ angular.module('myApp.services', []).
     };
 
     GradeService.setOriginalGrades = function(id, json) {
-      console.log(json);
-      console.log(id);
       store.set('qhac-grades-original-' + id, json);
       store.set('qhac-grades-' + id, json);
     };
@@ -64,8 +78,8 @@ angular.module('myApp.services', []).
     };
 
     GradeService.getInformationSpecificCycleCourse = function(id, courseId, cycleNumber, success, fail) {
-      //var district = GradeService.getUserInformation(id).district;
-      var district = Districts.roundrock; // debug todo wtf
+      var district = Districts[GradeService.getUserInformation(id).district];
+
       var json = this.getGrades(id);
       var course = _.find(json, function(course) {
         return course.courseId === courseId;
@@ -73,7 +87,13 @@ angular.module('myApp.services', []).
       var cycle = this.getCycle(course, cycleNumber);
       if(cycle.urlHash === undefined) { return false; }
       GradeRetriever.getClassGrades(district, cycle.urlHash, null, function (html) {
-        success(GradeParser.parseClassGrades(district, html, cycle.urlHash, null, null));
+        if(html === "Could not decode student id.") {
+          GradeService.login(id, district, function() {
+            GradeService.getInformationSpecificCycleCourse(id, courseId, cycleNumber, success, fail);
+          });
+        } else {
+          success(GradeParser.parseClassGrades(district, html, cycle.urlHash, null, null));
+        }
       }, function () {
         fail(); // todo redo
       });
