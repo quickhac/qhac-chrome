@@ -35,7 +35,7 @@ angular.module('myApp.services', []).
 
     GradeService.getUserInformation = function(id) {
       var users = store.get('qhac-users');
-      if(users === undefined) { store.set('qhac-users', {}); GradeService.getUserInformation(id); }
+      if(users === undefined) { store.set('qhac-users', {}); return GradeService.getUserInformation(id); }
       var user = users[id];
       return user || {};
     };
