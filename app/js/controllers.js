@@ -14,7 +14,8 @@ angular.module('myApp.controllers', []).
       GradeService.setUserInformation(id, 'id', id);
       GradeService.setUserInformation(id, 'username', this.username);
       GradeService.setUserInformation(id, 'password', this.password);
-      GradeService.login(id, district_information, function() {
+      GradeService.login(id, district_information, function(html) {
+        GradeService.setUserInformation(id, 'name', GradeParser.getStudentName(district_information, html));
         $location.path("/user/" + id + "/cycle/3");
         $scope.$apply();
       }, function() {
@@ -30,6 +31,8 @@ angular.module('myApp.controllers', []).
     $scope.next_cycle = parseInt($scope.cycle_number) + 1;
     $scope.previous_cycle = parseInt($scope.cycle_number) - 1;
     $scope.course_data = {};
+    $scope.overview = GradeService.getOverview($scope.user_id);
+    $scope.title = "arstarst";
     $scope.goToNextCycle = function() {
       $location.path("/user/" + $scope.user_id + "/cycle/" + $scope.next_cycle);
     };
@@ -42,5 +45,6 @@ angular.module('myApp.controllers', []).
         $scope.course_data = data;
         $scope.$apply();
       });
+      //$scope.$apply();
     };
   }]);

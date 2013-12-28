@@ -17,10 +17,10 @@ angular.module('myApp.services', []).
       var district = district;
 
       GradeRetriever.login(district, username, password, id, function() {
-        GradeRetriever.getAverages(district, function(data) {
-          var gradeData = GradeParser.parseAverages(district, data);
+        GradeRetriever.getAverages(district, function(html) {
+          var gradeData = GradeParser.parseAverages(district, html);
           GradeService.setOriginalGrades(id, gradeData);
-          success();
+          success(html);
         });
       });
     };
@@ -38,7 +38,18 @@ angular.module('myApp.services', []).
       if(users === undefined) { store.set('qhac-users', {}); GradeService.getUserInformation(id); }
       var user = users[id];
       return user || {};
-    }
+    };
+
+    GradeService.getAllUsers = function() {
+      return _.values(store.get('qhac-users') || {});
+    };
+
+    GradeService.deleteUser = function(id) {
+      var users = store.get('qhac-users') || {};
+      delete store[id];
+      store.set('qhac-users', users);
+    }; // todo bug does this work
+
     GradeService.getOriginalGrades = function(id) {
       return store.get('qhac-grades-original-' + id);
     };
@@ -98,6 +109,26 @@ angular.module('myApp.services', []).
         fail(); // todo redo
       });
     };
-        
+
+    GradeService.getOverview = function(id) {
+      var json = this.getGrades(id);
+      return _.map(json, function(course) {
+        var filteredCourse = {};
+        filteredCourse = _.pick(course, 'title', 'teacherEmail', 'teacherName', 'courseId');
+        filteredCourse.semesters = _.map(course.semesters, function(semester) {
+          var filteredSemester = _.pick(semester, 'average', 'examGrade', 'examIsExempt');
+          filteredSemester.cycles = _.map(semester.cycles, function(cycle) {
+            return cycle.average;
+          });
+          return filteredSemester;
+        });
+        return filteredCourse;
+      });
+    };
     return GradeService;
+
+  }).factory('CacheService', function() {
+    var CacheService;
+
+    return CacheService;
   });

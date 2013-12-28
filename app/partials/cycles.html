@@ -6,6 +6,26 @@
   <li ng-repeat="course in overall_courses"><a href="" ng-click="viewDetailed(course.id)">{{course.name}}</a>: {{course.average}}</li>
 </ul>
 <hr />
-<code>
+<h1>Name: {{course_data.title}}</h1>
+<h2>Average: {{course_data.average}}</h2>
+<div class="category" ng-repeat="category in course_data.categories">
+<h3>{{category.title}}: {{category.average}}. ({{category.weight}}%)</h3>
+  <ul>
+      <li ng-repeat="assignment in category.assignments">{{assignment.title}}: {{assignment.ptsEarned}}/{{assignment.ptsPossible}}. Notes: {{assignment.note}}</li>
+  </ul>
+</div>
+<hr />
+
+<pre>
 {{course_data | json}}
-</code>
+</pre>
+<!--
+  "id": "6817c589de0456f66cf714c83d1cb31dd2944c80",
+          "title": "Monologue Script",
+          "date": "Dec-11",
+          "ptsEarned": 100,
+          "ptsPossible": 100,
+          "weight": 1,
+          "note": "",
+          "extraCredit": false
+          -->
