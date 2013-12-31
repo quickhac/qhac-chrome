@@ -10,7 +10,7 @@ angular.module('myApp.controllers', []).
     $scope.submit = function() {
       var district_information = Districts[this.district_mapping[this.district]];
       var id = this.id;
-      GradeService.setUserInformation(id, 'district', this.district_mapping[this.district]); // zees is not good todo bug fixme, doesn't preserve the methods??!!
+      GradeService.setUserInformation(id, 'district', this.district_mapping[this.district]);
       GradeService.setUserInformation(id, 'id', id);
       GradeService.setUserInformation(id, 'username', this.username);
       GradeService.setUserInformation(id, 'password', this.password);
@@ -28,16 +28,16 @@ angular.module('myApp.controllers', []).
     $scope.user_id = $routeParams.user_id;
     $scope.cycle_number = $routeParams.cycle_number;
     $scope.overall_courses = GradeService.getOverallCycleInformation($scope.user_id, $scope.cycle_number);
-    $scope.next_cycle = parseInt($scope.cycle_number) + 1;
-    $scope.previous_cycle = parseInt($scope.cycle_number) - 1;
     $scope.course_data = {};
     $scope.overview = GradeService.getOverview($scope.user_id);
-    $scope.title = "arstarst";
+    
     $scope.goToNextCycle = function() {
-      $location.path("/user/" + $scope.user_id + "/cycle/" + $scope.next_cycle);
+      var next_cycle = parseInt($scope.cycle_number) + 1;
+      $location.path("/user/" + $scope.user_id + "/cycle/" + next_cycle);
     };
     $scope.goToPreviousCycle = function() {
-      $location.path("/user/" + $scope.user_id + "/cycle/" + $scope.previous_cycle);
+      var previous_cycle = parseInt($scope.cycle_number) - 1;
+      $location.path("/user/" + $scope.user_id + "/cycle/" + previous_cycle);
     };
 
     $scope.viewDetailed = function(course_id) {
@@ -45,6 +45,5 @@ angular.module('myApp.controllers', []).
         $scope.course_data = data;
         $scope.$apply();
       });
-      //$scope.$apply();
     };
   }]);

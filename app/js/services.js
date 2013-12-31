@@ -1,10 +1,6 @@
 'use strict';
 
 /* Services */
-
-
-// Demonstrate how to register services
-// In this case it is a simple value service.
 angular.module('myApp.services', []).
   factory('GradeService', function() {
     var GradeService = {};
@@ -46,7 +42,7 @@ angular.module('myApp.services', []).
 
     GradeService.deleteUser = function(id) {
       var users = store.get('qhac-users') || {};
-      delete store[id];
+      store[id] = undefined;
       store.set('qhac-users', users);
     }; // todo bug does this work
 
@@ -71,12 +67,14 @@ angular.module('myApp.services', []).
       this.setGrades(id, this.getOriginalGrades());
     };
 
+    // TODO FIXME BUG: don't hardcode cyle numbers
     GradeService.getCycle = function(course, cycleNumber) {
       var semesterIndex = cycleNumber <= 3 ? 0 : 1;
       var cycleIndex = (cycleNumber > 3 ? cycleNumber - 3 : cycleNumber) - 1;
       return course.semesters[semesterIndex].cycles[cycleIndex];
     };
 
+    // TODO FIXME BUG: don't hardcode cycle numbers
     GradeService.getOverallCycleInformation = function(id, cycleNumber) {
       if(cycleNumber > 6 || cycleNumber < 1) { return false; }
       var json = this.getGrades(id);
