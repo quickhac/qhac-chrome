@@ -1,3 +1,9 @@
+### Before you run the app
+`git submodule update`
+`cd app/lib/qhac-common`
+`make`
+`cd ../../../`
+
 ### Running the app during development
 
 You can pick one of these options:
