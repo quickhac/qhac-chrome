@@ -9,6 +9,7 @@ angular.module('myApp', [
   'myApp.directives',
   'myApp.controllers'
 ]).
+/* colons represent wildcards, are accessible to the controller */
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {templateUrl: 'partials/login.html', controller: 'LoginController'});
   $routeProvider.when('/user/:user_id/cycle/:cycle_number', {templateUrl: 'partials/cycles.html', controller: 'CycleController'});

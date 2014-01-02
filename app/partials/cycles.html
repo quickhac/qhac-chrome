@@ -1,20 +1,31 @@
 <p>Debug: User ID: {{user_id}}, Cycle Number: {{cycle_number}}.</p>
 <button ng-click="goToPreviousCycle()">Previous</button>
 <button ng-click="goToNextCycle()">Next</button>
-<hr />
+<hr /> <!-- mmm mm smexy -->
 <ul class="courses">
   <li ng-repeat="course in overall_courses"><a href="" ng-click="viewDetailed(course.id)">{{course.name}}</a>: {{course.average}}</li>
 </ul>
+<hr /> <!-- mmm mm smexy -->
+<h3>Edit in Place Test</h3>
+<edit-in-place value="sample"></edit-in-place>
+<pre>Value stored in $scope.sample = {{sample}}</pre>
 <hr />
 <h1>Name: {{course_data.title}}</h1>
 <h2>Average: {{course_data.average}}</h2>
+
 <div class="category" ng-repeat="category in course_data.categories">
 <h3>{{category.title}}: {{category.average}}. ({{category.weight}}%)</h3>
-  <ul>
-      <li ng-repeat="assignment in category.assignments">{{assignment.title}}: {{assignment.ptsEarned}}/{{assignment.ptsPossible}}. Notes: {{assignment.note}}</li>
-  </ul>
+<ul>
+    <li ng-repeat="assignment in category.assignments">
+      Name: {{assignment.title}}
+      <ul>
+        <li>Points Earned: {{assignment.ptsEarned}}</li>
+        <li ng-hide="assignment.ptsPossible === 100">Points Possible: {{assignment.ptsPossible}}</li>
+      </ul>
+    </li>
+</ul>
 </div>
-<hr />
+<hr /> <!-- mmm mm smexy -->
 
 <pre>
 {{course_data | json}}
