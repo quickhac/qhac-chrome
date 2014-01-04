@@ -1,0 +1,334 @@
+<header>
+  <h1> <i class="fa fa-rocket"></i>
+    <span class="app-name">
+      Quick
+      <span>HAC</span>
+    </span>
+  </h1>
+  <span class="flex-space"></span>
+  <ul class="action-bar">
+    <li ng-click="refresh()" data-tip="Refresh"> <i class="icon-refresh"></i>
+    </li>
+  </ul>
+  <div data-tip="Notifications" class="popover-button">
+    <label>
+      <input type="radio" name="focus" class="dropdown-toggle">
+      <span class="popover-title"></span>
+      <i class="icon-ios7-bell"></i>
+      <div class="popover">
+        <!--<ul class="notifications">
+          <li>
+            <a href="#/student/101010/course/1/cycle/1" class="card unread">
+              <i class="main fa fa-arrow-circle-o-up"></i>
+              <div class="notification-content">
+                <h2>Gordon Freeman</h2>
+                <p>New grade in Combinatorics &amp; Graph Theory</p>
+                <p class="soft">
+                  <small>Scored 98 on “Combinatorics Test”</small>
+                </p>
+                <i class="close icon-close"></i>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="#/student/011235/course/1/cycle/1" class="card unread">
+              <i class="main fa fa-arrow-circle-o-up"></i>
+              <div class="notification-content">
+                <h2>Alyx Vance</h2>
+                <p>New grade in Language Arts</p>
+                <p class="soft">
+                  <small>Scored 92 on “Persuasive Essay”</small>
+                </p>
+                <i class="close icon-close"></i>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="#/student/101010/course/1/cycle/1" class="card">
+              <i class="main fa fa-arrow-circle-o-up"></i>
+              <div class="notification-content">
+                <h2>Gordon Freeman</h2>
+                <p>New grade in Combinatorics &amp; Graph Theory</p>
+                <p class="soft">
+                  <small>Scored 100 on “Combinatorics Review”</small>
+                </p>
+                <i class="close icon-close"></i>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="#/student/101010/course/1/cycle/1" class="card">
+              <i class="main fa fa-arrow-circle-o-up"></i>
+              <div class="notification-content">
+                <h2>Gordon Freeman</h2>
+                <p>New grade in Combinatorics &amp; Graph Theory</p>
+                <p class="soft">
+                  <small>Scored 90 on “Combinatorics and Probability Quiz”</small>
+                </p>
+                <i class="close icon-close"></i>
+              </div>
+            </a>
+          </li>
+        </ul> -->
+      </div>
+      <div class="popover-triangle"></div>
+    </label>
+  </div>
+  <div class="student-panel popover-button">
+    <label>
+      <input type="radio" name="focus" class="dropdown-toggle">
+      <span class="popover-title">{{user_information.name}}</span>
+      <i class="icon-chevron-down"></i>
+      <div class="popover">
+        <ul>
+          <li ng-repeat="student in other_students">
+            <a href="#/student/{{student.id}}">
+              <i class="icon-person" data-color="silver"></i>
+              <span class="title">{{student.name}}</span>
+            </a>
+          </li>
+<!--           <li>
+            <a href="#/student/guest">
+              <i class="icon-briefcase"></i>
+              <span class="title">Guest Mode</span>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+      <div class="popover-triangle"></div>
+    </label>
+  </div>
+</header>
+<div class="main-view">
+  <div class="sidebar">
+    <ul class="views">
+      <li>
+        <a href="#/student/{{user_information.id}}/dashboard">
+          <i class="icon-stats-bars"></i>
+          <span class="title">Dashboard</span>
+        </a>
+      </li>
+    </ul>
+    <h2>Courses</h2>
+    <ul class="courses">
+      <li ng-repeat="course in overall_courses">
+        <a href="" ng-click="viewDetailed(course.id)">
+          <span class="title">{{course.name}}</span>
+          <span class="average">{{course.average}}</span>
+        </a>
+      </li>
+    </ul>
+    <h2>More</h2>
+    <ul>
+      <li>
+        <a href="#/preferences">
+          <i class="icon-gear-a"></i>
+          <span class="title">Preferences</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://chrome.google.com/webstore/support/dnboopdmbbpaicaphfkcphonijbfhopg?hl=en&amp;amp;gl=US#question" target="_blank">
+          <i class="icon-help-circled"></i>
+          <span class="title">Help</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://chrome.google.com/webstore/support/dnboopdmbbpaicaphfkcphonijbfhopg?hl=en&amp;amp;gl=US#bug" target="_blank">
+          <i class="icon-alert-circled"></i>
+          <span class="title">Report Issue</span>
+        </a>
+      </li>
+      <li>
+        <a href="#/logout">
+          <i class="icon-log-out"></i>
+          <span class="title">Sign Out</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="content" ng-hide="course_data.teacherName">
+    Click a course. This is a sad initial message. Dat design.
+  </div>
+  <div class="content" ng-hide="!course_data.teacherName">
+    <div class="content-header">
+      <h2>{{course_data.title}}</h2>
+      <ul class="course-details">
+        <li class="course-teacher">{{course_data.teacherName}}
+          <a href="mailto:{{course_data.teacherEmail}}">
+            <i class="icon-email"></i>
+          </a>
+        </li>
+        <li class="course-period">Period {{course_data.period}}</li>
+        <li class="course-average">{{course_data.average}}</li>
+        <li class="course-goal">100</li>
+      </ul>
+      <p class="message-updated">Updated 42 minutes ago</p>
+      <ul class="tab-bar">
+        <li class="selected">
+          <a href="#/user/{{user_information.id}}/cycle/1">Cycle 1</a>
+        </li>
+        <li>
+          <a href="/user/{{user_information.id}}/cycle/2">Cycle 2</a>
+        </li>
+        <li>
+          <a href="/user/{{user_information.id}}/cycle/3">Cycle 3</a>
+        </li>
+        <li>
+          <a href="/user/{{user_information.id}}/cycle/4">Cycle 4</a>
+        </li>
+        <li>
+          <a href="/user/{{user_information.id}}/cycle/5">Cycle 5</a>
+        </li>
+        <li>
+          <a href="/user/{{user_information.id}}/cycle/6">Cycle 6</a>
+        </li>
+      </ul>
+    </div>
+    <div class="column">
+      <div class="card" ng-repeat="category in course_data.categories">
+        <h2>
+          {{category.title}}
+          <span class="percent">{{category.weight}}</span>
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th class="date">Date Assigned</th>
+              <th class="date">Date Due</th>
+              <th class="numeric">Points Earned</th>
+              <th class="numeric">Weight</th>
+              <th class="numeric">Points Possible</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr  class="assignment" ng-repeat="assignment in category.assignments">
+              <td>{{assignment.title}}</td>
+              <td class="date">Aug 28</td>
+              <td class="date">Sep 4</td>
+              <td class="numeric">{{assignment.ptsEarned || ''}}</td>
+              <td class="numeric">{{assignment.weight}}</td>
+              <td class="numeric">{{assignment.ptsPossible}}</td>
+              <td>{{assignment.note}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Average</td>
+              <td class="numeric">{{category.average}}</td>
+              <td colspan="3"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <!-- <div class="card">
+        <h2>
+          Quizzes
+          <span class="percent">30</span>
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th class="date">Date Assigned</th>
+              <th class="date">Date Due</th>
+              <th class="numeric">Points Earned</th>
+              <th class="numeric">Weight</th>
+              <th class="numeric">Points Possible</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Factorials Quiz</td>
+              <td class="date">Sep 4</td>
+              <td class="date">Sep 4</td>
+              <td class="numeric">100</td>
+              <td class="numeric">1</td>
+              <td class="numeric">100</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Permutations Quiz</td>
+              <td class="date">Sep 11</td>
+              <td class="date">Sep 11</td>
+              <td class="numeric">100</td>
+              <td class="numeric">1</td>
+              <td class="numeric">100</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Combinations Quiz</td>
+              <td class="date">Sep 18</td>
+              <td class="date">Sep 18</td>
+              <td class="numeric">90</td>
+              <td class="numeric">1</td>
+              <td class="numeric">100</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Combinatorics and Probability Quiz</td>
+              <td class="date">Sep 25</td>
+              <td class="date">Sep 25</td>
+              <td class="numeric">90</td>
+              <td class="numeric">1</td>
+              <td class="numeric">100</td>
+              <td></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Average</td>
+              <td class="numeric">95</td>
+              <td colspan="3"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="card">
+        <h2>
+          Tests
+          <span class="percent">60</span>
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th class="date">Date Assigned</th>
+              <th class="date">Date Due</th>
+              <th class="numeric">Points Earned</th>
+              <th class="numeric">Weight</th>
+              <th class="numeric">Points Possible</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Combinatorics Test</td>
+              <td class="date">Oct 9</td>
+              <td class="date">Oct 9</td>
+              <td class="numeric">98</td>
+              <td class="numeric">1</td>
+              <td class="numeric">100</td>
+              <td></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Average</td>
+              <td class="numeric">98</td>
+              <td colspan="3"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div> -->
+    </div>
+  </div>
+</div>
+<!-- <div class="banner promotion">
+  <span class="message-banner">
+    <a href="https://www.facebook.com/">Let's keep in touch on Facebook!</a>
+  </span>
+  <i class="close icon-close-circled"></i>
+</div> -->

@@ -3,11 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>My AngularJS App</title>
-  <link rel="stylesheet" href="css/app.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <style>
+    .assignment:nth-child(odd) {
+      background-color: #F0F2F5;
+    }
+  </style>
 </head>
 <body>
 
-  <div ng-view></div>
+  <div id="preview" ng-view></div>
   
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>

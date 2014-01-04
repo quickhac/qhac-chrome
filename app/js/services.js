@@ -143,7 +143,11 @@ angular.module('myApp.services', []).
             GradeService.getInformationSpecificCycleCourse(id, courseId, cycleNumber, success, fail);
           });
         } else {
-          success(GradeParser.parseClassGrades(district, html, cycle.urlHash, null, null));
+          var specific_grades = GradeParser.parseClassGrades(district, html, cycle.urlHash, null, null);
+          specific_grades.teacherName = course.teacherName;
+          specific_grades.teacherEmail = course.teacherEmail;
+          specific_grades.courseId = course.courseId;
+          success(specific_grades);
         }
       }, function () {
         fail(); // todo redo
