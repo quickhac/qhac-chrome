@@ -32,11 +32,12 @@ angular.module('myApp.controllers', []).
     $scope.cycle_number = $routeParams.cycle_number; // this comes from the URL
     $scope.overall_courses = GradeService.getOverallCycleInformation($scope.user_id, $scope.cycle_number);
     $scope.course_data = {};
-    console.log($scope.course_data);
+    //console.log($scope.course_data);
     $scope.overview = GradeService.getOverview($scope.user_id);
     $scope.sample = "sample"; // this is to test that directive
     $scope.user_information = GradeService.getUserInformation($scope.user_id);
     $scope.other_students = GradeService.getAllUsers();
+    $scope.current_course = null;
     
     $scope.goToNextCycle = function() {
       var next_cycle = parseInt($scope.cycle_number) + 1;
@@ -50,11 +51,15 @@ angular.module('myApp.controllers', []).
     $scope.viewDetailed = function(course_id) {
       GradeService.getInformationSpecificCycleCourse($scope.user_id, course_id, $scope.cycle_number, function(data) {
         $scope.course_data = data;
+        $scope.current_course = course_id;
         $scope.$apply();
       });
     };
-
     $scope.refresh = function() {
-      console.log("not implemented");
+      console.log('hi?')
+      $scope.overall_courses = GradeService.getOverallCycleInformation($scope.user_id, $scope.cycle_number);
+      if($scope.current_course) {
+        $scope.viewDetailed($scope.current_course);
+      }
     };
   }]);

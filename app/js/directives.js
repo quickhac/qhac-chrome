@@ -15,7 +15,7 @@ angular.module('myApp.directives', []).
     return {
       restrict: 'E',
       scope: { value: '=' },
-      template: '<span ng-click="edit()" ng-bind="value"></span><input style="display:none;" ng-model="value"></input>',
+      template: '<td ng-click="edit()" ng-bind="value"></td><input style="display:none;" ng-model="value"></input>',
       link: function($scope, element, attrs) {
         var inputElement = angular.element(element.children()[1]);
         var displayElement = angular.element(element.children()[0]);

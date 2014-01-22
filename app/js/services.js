@@ -21,6 +21,16 @@ angular.module('myApp.services', []).
       });
     };
 
+    // GradeService.refresh = function(id) {
+    //   GradeRetriever.getAverages(district, function(html) {
+    //     if(html === "Could not decode student id.") {
+    //       GradeRetriever.login(function() {
+    //         if()
+    //       });
+    //     }
+    //   });
+    // };
+
     /*
       So here's a weird design decision on the user storing. It's stored as an Object instead of an array, like this:
       {

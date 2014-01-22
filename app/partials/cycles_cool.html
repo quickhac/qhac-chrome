@@ -111,7 +111,7 @@
     </ul>
     <h2>Courses</h2>
     <ul class="courses">
-      <li ng-repeat="course in overall_courses">
+      <li ng-class="{'selected': course.id == current_course }" ng-repeat="course in overall_courses">
         <a href="" ng-click="viewDetailed(course.id)">
           <span class="title">{{course.name}}</span>
           <span class="average">{{course.average}}</span>
@@ -203,11 +203,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr  class="assignment" ng-repeat="assignment in category.assignments">
+            <tr class="assignment" ng-repeat="assignment in category.assignments">
               <td>{{assignment.title}}</td>
               <td class="date">Aug 28</td>
               <td class="date">Sep 4</td>
-              <td class="numeric">{{assignment.ptsEarned || ''}}</td>
+              <td class="numeric"><input style="border: none; background-color: transparent; font-family: Helvetica Neue, Helvetica; line-height: 1.5; text-align: center !important; height: 27px; font-weight: 300; font-size: 16px;" ng-model="assignment.ptsEarned"></input></td>
               <td class="numeric">{{assignment.weight}}</td>
               <td class="numeric">{{assignment.ptsPossible}}</td>
               <td>{{assignment.note}}</td>
