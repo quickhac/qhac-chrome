@@ -12,16 +12,18 @@ angular.module('myApp.services', []).
       var password = userInformation.password;
       var district = district;
 
-      GradeRetriever.login(district, username, password, id, function() {
-        GradeRetriever.getAverages(district, function(html) {
-          var gradeData = GradeParser.parseAverages(district, html);
-          GradeService.setOriginalGrades(id, gradeData);
-          success(html); // in case they want to use the bare HTML. makes more sense to send gradedata, but this is for backwards compatibility I think
-        });
-      });
+      GradeRetriever.login(district, username, password, function(doc, $dom, choices, state) {
+        GradeRetriever.disambiguate(district, id, state, function(doc, $dom) {
+          GradeRetriever.getAverages(district, function(html) {
+            var gradeData = GradeParser.parseAverages(district, html);
+            GradeService.setOriginalGrades(id, gradeData);
+            success(html); // in case they want to use the bare HTML. makes more sense to send gradedata, but this is for backwards compatibility I think
+          });
+        }, function(ev) { console.log(ev); });
+      }, function(ev) { console.log(ev); });
     };
 
-    // GradeService.refresh = function(id) {
+    // GradeService.refresh = function(id, courseId, cycleNumber) {
     //   GradeRetriever.getAverages(district, function(html) {
     //     if(html === "Could not decode student id.") {
     //       GradeRetriever.login(function() {
@@ -61,7 +63,7 @@ angular.module('myApp.services', []).
       var users = store.get('qhac-users');
       if(users === undefined) { store.set('qhac-users', {}); return GradeService.getUserInformation(id); }
       var user = users[id];
-      return user || {};
+      return user || undefined;
     };
 
     GradeService.getAllUsers = function() {

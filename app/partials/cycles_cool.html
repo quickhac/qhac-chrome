@@ -149,7 +149,7 @@
   <div class="content" ng-hide="course_data.teacherName">
     Click a course. This is a sad initial message. Dat design.
   </div>
-  <div class="content" ng-hide="!course_data.teacherName">
+  <div class="content" ng-show="course_data.teacherName">
     <div class="content-header">
       <h2>{{course_data.title}}</h2>
       <ul class="course-details">
@@ -207,7 +207,8 @@
               <td>{{assignment.title}}</td>
               <td class="date">Aug 28</td>
               <td class="date">Sep 4</td>
-              <td class="numeric"><input style="border: none; background-color: transparent; font-family: Helvetica Neue, Helvetica; line-height: 1.5; text-align: center !important; height: 27px; font-weight: 300; font-size: 16px;" ng-model="assignment.ptsEarned"></input></td>
+              <td class="numeric" ng-hide="assignment.editedPointsEarned"><input ng-change="" style="border: none; background-color: transparent; font-family: Helvetica Neue, Helvetica; line-height: 1.5; text-align: center !important; height: 27px; font-weight: 300; font-size: 16px;" ng-model="assignment.ptsEarned"></input></td>
+              <td class="numeric" ng-hide="assignment.editedPointsEarned"><input ng-change="" style="border: none; background-color: transparent; font-family: Helvetica Neue, Helvetica; line-height: 1.5; text-align: center !important; height: 27px; font-weight: 300; font-size: 16px;" ng-model="assignment.ptsEarned"></input></td>
               <td class="numeric">{{assignment.weight}}</td>
               <td class="numeric">{{assignment.ptsPossible}}</td>
               <td>{{assignment.note}}</td>

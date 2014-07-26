@@ -12,18 +12,24 @@ angular.module('myApp.controllers', []).
       /* district_information is the whole district object, however, we just want to persist the basic name (roundrock or austin) */
       var district_information = Districts[this.district_mapping[this.district]];
       var id = this.id; // look at the HTML: this magically appears from there
-      GradeService.setUserInformation(id, 'district', this.district_mapping[this.district]);
-      GradeService.setUserInformation(id, 'id', id);
-      GradeService.setUserInformation(id, 'username', this.username);
-      GradeService.setUserInformation(id, 'password', this.password);
-      GradeService.login(id, district_information, function(html) {
-        GradeService.setUserInformation(id, 'name', GradeParser.getStudentName(district_information, html));
-        $location.path("/user/" + id + "/cycle/3");
-        $scope.$apply(); // so that things will update and work
-      }, function() {
-        $scope.message = "Failed to log in. Check your username/password.";
-        $scope.$apply(); // so that things will update and work
-      });
+      if(GradeService.getUserInformation(id)) {
+        GradeService.login(id, district_information, function(html) {
+          $location.path("/user/" + id + "/cycle/3");
+        });
+      } else {
+        GradeService.setUserInformation(id, 'district', this.district_mapping[this.district]);
+        GradeService.setUserInformation(id, 'id', id);
+        GradeService.setUserInformation(id, 'username', this.username);
+        GradeService.setUserInformation(id, 'password', this.password);
+        GradeService.login(id, district_information, function(html) {
+          GradeService.setUserInformation(id, 'name', GradeParser.getStudentName(district_information, html));
+          $location.path("/user/" + id + "/cycle/3");
+          $scope.$apply(); // so that things will update and work
+        }, function() {
+          $scope.message = "Failed to log in. Check your username/password.";
+          $scope.$apply(); // so that things will update and work
+        });
+      }
     };
   }])
   // see partial cycles.html
@@ -34,7 +40,7 @@ angular.module('myApp.controllers', []).
     $scope.course_data = {};
     //console.log($scope.course_data);
     $scope.overview = GradeService.getOverview($scope.user_id);
-    $scope.sample = "sample"; // this is to test that directive
+    //$scope.sample = "sample"; // this is to test that directive
     $scope.user_information = GradeService.getUserInformation($scope.user_id);
     $scope.other_students = GradeService.getAllUsers();
     $scope.current_course = null;
