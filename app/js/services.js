@@ -2,7 +2,7 @@
 
 /* Services */
 angular.module('myApp.services', []).
-  factory('UserService', function() {
+  factory('UserService', function($rootScope) {
     var UserService = {};
 
     // UserService.login = function(id, district, success, fail) { // FIXME clarify which district. or make it work with both
@@ -52,11 +52,8 @@ angular.module('myApp.services', []).
       But hey, this is why setUserInformation, getUserInformation, and deleteUser have some weirdness.
     */
     UserService.setUserInformation = function(id, key, value) {
-      console.log("wtf");
       var users = store.get('qhac-users') || {}; // can't use getallusers because we need to get the whole object
       var user = UserService.getUserInformation(id) || {}; // O(1)! yay?
-      console.log(user);
-      console.log(users);
       user[key] = value; // change the one key we need to change
       users[id] = user;
       store.set('qhac-users', users);
@@ -149,32 +146,23 @@ angular.module('myApp.services', []).
 
       var json = this.getGrades(id);
       var course = _.find(json, function(course) {
-        return course.courseId === courseId;
+        return course.id === courseId;
       });
       var cycle = this.getCycle(course, cycleNumber);
       if(cycle.urlHash === undefined) { return false; }
-      GradeRetriever.getClassGrades(district, cycle.urlHash, null, function (html) {
-        if(html === "Could not decode student id.") {
-          UserService.login(id, district, function() {
-            UserService.getInformationSpecificCycleCourse(id, courseId, cycleNumber, success, fail);
-          });
-        } else {
-          var specific_grades = GradeParser.parseClassGrades(district, html, cycle.urlHash, null, null);
-          specific_grades.teacherName = course.teacherName;
-          specific_grades.teacherEmail = course.teacherEmail;
-          specific_grades.courseId = course.courseId;
-          success(specific_grades);
-        }
-      }, function () {
-        fail(); // todo redo
-      });
+      var specific_grades = $rootScope.gs.getGradesCycle(cycle.urlHash);
+      console.log(specific_grades);
+      specific_grades.teacherName = course.teacherName;
+      specific_grades.teacherEmail = course.teacherEmail;
+      specific_grades.courseId = course.id;
+      success(specific_grades);
     };
 
     UserService.getOverview = function(id) {
       var json = this.getGrades(id);
       return _.map(json, function(course) {
         var filteredCourse = {};
-        filteredCourse = _.pick(course, 'title', 'teacherEmail', 'teacherName', 'courseId');
+        filteredCourse = _.pick(course, 'title', 'teacherEmail', 'teacherName', 'id');
         filteredCourse.semesters = _.map(course.semesters, function(semester) {
           var filteredSemester = _.pick(semester, 'average', 'examGrade', 'examIsExempt');
           filteredSemester.cycles = _.map(semester.cycles, function(cycle) {

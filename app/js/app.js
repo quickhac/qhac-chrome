@@ -1,7 +1,6 @@
 'use strict';
 
-window.gs = new GradeService();
-window.lolwow = undefined;
+//window.gs = new GradeService();
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
   'ngRoute',
