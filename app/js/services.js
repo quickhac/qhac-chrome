@@ -2,28 +2,28 @@
 
 /* Services */
 angular.module('myApp.services', []).
-  factory('GradeService', function() {
-    var GradeService = {};
+  factory('UserService', function() {
+    var UserService = {};
 
-    GradeService.login = function(id, district, success, fail) { // FIXME clarify which district. or make it work with both
-      var userInformation = GradeService.getUserInformation(id);
-      var id = id;
-      var username = userInformation.username;
-      var password = userInformation.password;
-      var district = district;
+    // UserService.login = function(id, district, success, fail) { // FIXME clarify which district. or make it work with both
+    //   var userInformation = UserService.getUserInformation(id);
+    //   var id = id;
+    //   var username = userInformation.username;
+    //   var password = userInformation.password;
+    //   var district = district;
 
-      GradeRetriever.login(district, username, password, function(doc, $dom, choices, state) {
-        GradeRetriever.disambiguate(district, id, state, function(doc, $dom) {
-          GradeRetriever.getAverages(district, function(html) {
-            var gradeData = GradeParser.parseAverages(district, html);
-            GradeService.setOriginalGrades(id, gradeData);
-            success(html); // in case they want to use the bare HTML. makes more sense to send gradedata, but this is for backwards compatibility I think
-          });
-        }, function(ev) { console.log(ev); });
-      }, function(ev) { console.log(ev); });
-    };
+    //   GradeRetriever.login(district, username, password, function(doc, $dom, choices, state) {
+    //     GradeRetriever.disambiguate(district, id, state, function(doc, $dom) {
+    //       GradeRetriever.getAverages(district, function(html) {
+    //         var gradeData = GradeParser.parseAverages(district, html);
+    //         UserService.setOriginalGrades(id, gradeData);
+    //         success(html); // in case they want to use the bare HTML. makes more sense to send gradedata, but this is for backwards compatibility I think
+    //       });
+    //     }, function(ev) { console.log(ev); });
+    //   }, function(ev) { console.log(ev); });
+    // };
 
-    // GradeService.refresh = function(id, courseId, cycleNumber) {
+    // UserService.refresh = function(id, courseId, cycleNumber) {
     //   GradeRetriever.getAverages(district, function(html) {
     //     if(html === "Could not decode student id.") {
     //       GradeRetriever.login(function() {
@@ -51,58 +51,62 @@ angular.module('myApp.services', []).
       seems stupid, because there aren't going to be more than 4-5 students, so this might be changed in the future.
       But hey, this is why setUserInformation, getUserInformation, and deleteUser have some weirdness.
     */
-    GradeService.setUserInformation = function(id, key, value) {
+    UserService.setUserInformation = function(id, key, value) {
+      console.log("wtf");
       var users = store.get('qhac-users') || {}; // can't use getallusers because we need to get the whole object
-      var user = GradeService.getUserInformation(id); // O(1)! yay?
+      var user = UserService.getUserInformation(id) || {}; // O(1)! yay?
+      console.log(user);
+      console.log(users);
       user[key] = value; // change the one key we need to change
       users[id] = user;
       store.set('qhac-users', users);
     };
 
-    GradeService.getUserInformation = function(id) {
+    UserService.getUserInformation = function(id) {
       var users = store.get('qhac-users');
-      if(users === undefined) { store.set('qhac-users', {}); return GradeService.getUserInformation(id); }
+      if(users === undefined) { store.set('qhac-users', {}); return UserService.getUserInformation(id); }
       var user = users[id];
       return user || undefined;
     };
 
-    GradeService.getAllUsers = function() {
+    UserService.getAllUsers = function() {
       return _.values(store.get('qhac-users') || {}); // this is going to be for student selection, so this converts into an array of values
     };
 
-    GradeService.deleteUser = function(id) {
+    UserService.deleteUser = function(id) {
       var users = store.get('qhac-users') || {};
       store[id] = undefined;
       store.set('qhac-users', users);
     }; // todo bug does this work
 
+
     /*
       The second (and more understandable) design decision was to have "original grades" and simply "grades". Original grades just contain
       the original response from HAC, just in case we want to revert from that. (Because the primary grade store might have some grade changes).
     */
-    GradeService.getOriginalGrades = function(id) {
+    UserService.getOriginalGrades = function(id) {
       return store.get('qhac-grades-original-' + id);
     };
 
-    GradeService.setOriginalGrades = function(id, json) {
+    UserService.setOriginalGrades = function(id, json) {
       store.set('qhac-grades-original-' + id, json);
       store.set('qhac-grades-' + id, json);
     };
 
-    GradeService.getGrades = function(id) {
+    UserService.getGrades = function(id) {
       return store.get('qhac-grades-' + id);
     };
 
-    GradeService.setGrades = function(id, json) {
+    UserService.setGrades = function(id, json) {
       store.set('qhac-grades-' + id, json);
     };
 
-    GradeService.revertChanges = function(id) {
+    UserService.revertChanges = function(id) {
       this.setGrades(id, this.getOriginalGrades());
     };
 
     // TODO FIXME BUG: don't hardcode cyle numbers
-    GradeService.getCycle = function(course, cycleNumber) {
+    UserService.getCycle = function(course, cycleNumber) {
       var semesterIndex = cycleNumber <= 3 ? 0 : 1;
       var cycleIndex = (cycleNumber > 3 ? cycleNumber - 3 : cycleNumber) - 1;
       return course.semesters[semesterIndex].cycles[cycleIndex];
@@ -124,13 +128,13 @@ angular.module('myApp.services', []).
         }
       ]
     */
-    GradeService.getOverallCycleInformation = function(id, cycleNumber) {
+    UserService.getOverallCycleInformation = function(id, cycleNumber) {
       if(cycleNumber > 6 || cycleNumber < 1) { return false; }
       var json = this.getGrades(id);
       return _.map(json, function(course) {
         var courseName = course.title;
-        var id = course.courseId;
-        var average = GradeService.getCycle(course, cycleNumber).average;
+        var id = course.id;
+        var average = UserService.getCycle(course, cycleNumber).average;
         return { id: id, name: courseName, average: average};
       });
     };
@@ -140,8 +144,8 @@ angular.module('myApp.services', []).
       First it finds the course from the courseId by searching through the course list.
       Then it gets the class grades (if we're not logged in anymore, we login first and try again)
     */
-    GradeService.getInformationSpecificCycleCourse = function(id, courseId, cycleNumber, success, fail) {
-      var district = Districts[GradeService.getUserInformation(id).district];
+    UserService.getInformationSpecificCycleCourse = function(id, courseId, cycleNumber, success, fail) {
+      var district = Districts[UserService.getUserInformation(id).district];
 
       var json = this.getGrades(id);
       var course = _.find(json, function(course) {
@@ -151,8 +155,8 @@ angular.module('myApp.services', []).
       if(cycle.urlHash === undefined) { return false; }
       GradeRetriever.getClassGrades(district, cycle.urlHash, null, function (html) {
         if(html === "Could not decode student id.") {
-          GradeService.login(id, district, function() {
-            GradeService.getInformationSpecificCycleCourse(id, courseId, cycleNumber, success, fail);
+          UserService.login(id, district, function() {
+            UserService.getInformationSpecificCycleCourse(id, courseId, cycleNumber, success, fail);
           });
         } else {
           var specific_grades = GradeParser.parseClassGrades(district, html, cycle.urlHash, null, null);
@@ -166,7 +170,7 @@ angular.module('myApp.services', []).
       });
     };
 
-    GradeService.getOverview = function(id) {
+    UserService.getOverview = function(id) {
       var json = this.getGrades(id);
       return _.map(json, function(course) {
         var filteredCourse = {};
@@ -181,7 +185,7 @@ angular.module('myApp.services', []).
         return filteredCourse;
       });
     };
-    return GradeService;
+    return UserService;
 
   }).factory('CacheService', function() {
     var CacheService;
