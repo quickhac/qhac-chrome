@@ -1,6 +1,5 @@
 'use strict';
 
-//window.gs = new GradeService();
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
   'ngRoute',

@@ -19,10 +19,7 @@ angular.module('myApp.controllers', []).
       $rootScope.gs = new GradeService();
       $rootScope.gs.ready().then(function() {
         $rootScope.gs.attemptLogin(district_information, username, password).then(function(retData) {
-          console.log("yes");
           UserService.setUserInformation(id, 'district', district);
-                    console.log("wut");
-
           UserService.setUserInformation(id, 'id', id);
           UserService.setUserInformation(id, 'username', username);
           UserService.setUserInformation(id, 'password', password);
@@ -40,9 +37,7 @@ angular.module('myApp.controllers', []).
     $scope.cycle_number = $routeParams.cycle_number; // this comes from the URL
     $scope.overall_courses = UserService.getOverallCycleInformation($scope.user_id, $scope.cycle_number);
     $scope.course_data = {};
-    //console.log($scope.course_data);
     $scope.overview = UserService.getOverview($scope.user_id);
-    //$scope.sample = "sample"; // this is to test that directive
     $scope.user_information = UserService.getUserInformation($scope.user_id);
     $scope.other_students = UserService.getAllUsers();
     $scope.current_course = null;
@@ -61,11 +56,9 @@ angular.module('myApp.controllers', []).
         console.log(data);
         $scope.course_data = data;
         $scope.current_course = course_id;
-        //$scope.$apply();
       });
     };
     $scope.refresh = function() {
-      console.log('hi?')
       $scope.overall_courses = UserService.getOverallCycleInformation($scope.user_id, $scope.cycle_number);
       if($scope.current_course) {
         $scope.viewDetailed($scope.current_course);

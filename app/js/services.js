@@ -4,35 +4,6 @@
 angular.module('myApp.services', []).
   factory('UserService', function($rootScope) {
     var UserService = {};
-
-    // UserService.login = function(id, district, success, fail) { // FIXME clarify which district. or make it work with both
-    //   var userInformation = UserService.getUserInformation(id);
-    //   var id = id;
-    //   var username = userInformation.username;
-    //   var password = userInformation.password;
-    //   var district = district;
-
-    //   GradeRetriever.login(district, username, password, function(doc, $dom, choices, state) {
-    //     GradeRetriever.disambiguate(district, id, state, function(doc, $dom) {
-    //       GradeRetriever.getAverages(district, function(html) {
-    //         var gradeData = GradeParser.parseAverages(district, html);
-    //         UserService.setOriginalGrades(id, gradeData);
-    //         success(html); // in case they want to use the bare HTML. makes more sense to send gradedata, but this is for backwards compatibility I think
-    //       });
-    //     }, function(ev) { console.log(ev); });
-    //   }, function(ev) { console.log(ev); });
-    // };
-
-    // UserService.refresh = function(id, courseId, cycleNumber) {
-    //   GradeRetriever.getAverages(district, function(html) {
-    //     if(html === "Could not decode student id.") {
-    //       GradeRetriever.login(function() {
-    //         if()
-    //       });
-    //     }
-    //   });
-    // };
-
     /*
       So here's a weird design decision on the user storing. It's stored as an Object instead of an array, like this:
       {
@@ -151,9 +122,6 @@ angular.module('myApp.services', []).
       var cycle = this.getCycle(course, cycleNumber);
       if(cycle.urlHash === undefined) { return false; }
       var specific_grades = $rootScope.gs.getGradesCycle(cycle.urlHash);
-      console.log(specific_grades);
-      specific_grades.teacherName = course.teacherName;
-      specific_grades.teacherEmail = course.teacherEmail;
       specific_grades.courseId = course.id;
       success(specific_grades);
     };
