@@ -73,11 +73,10 @@ angular.module('myApp.services', []).
       this.setGrades(id, this.getOriginalGrades());
     };
 
-    // TODO FIXME BUG: don't hardcode cyle numbers
     UserService.getCycle = function(course, cycleNumber) {
-      var semesterIndex = cycleNumber <= 3 ? 0 : 1;
-      var cycleIndex = (cycleNumber > 3 ? cycleNumber - 3 : cycleNumber) - 1;
-      return course.semesters[semesterIndex].cycles[cycleIndex];
+      var cycles = course.semesters[0].cycles.concat(course.semesters[1].cycles);
+      var idx = cycleNumber - 1;
+      return cycles[idx];
     };
 
     // TODO FIXME BUG: don't hardcode cycle numbers
@@ -97,7 +96,7 @@ angular.module('myApp.services', []).
       ]
     */
     UserService.getOverallCycleInformation = function(id, cycleNumber) {
-      if(cycleNumber > 6 || cycleNumber < 1) { return false; }
+      //if(cycleNumber > 6 || cycleNumber < 1) { return false; }
       var json = this.getGrades(id);
       return _.map(json, function(course) {
         var courseName = course.title;

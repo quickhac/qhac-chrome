@@ -5,7 +5,7 @@
 angular.module('myApp.controllers', []).
   // see partial login.html
   controller('LoginController', ['$scope', 'UserService', '$location', '$rootScope', function($scope, UserService, $location, $rootScope) {
-    $scope.districts = _.map(Districts, function(district_obj) { return district_obj.name; })
+    $scope.districts = _.map(Districts, function(district_obj) { return district_obj.name; });
     $scope.submit = function() {
       /* district_information is the whole district object, however, we just want to persist the basic name (roundrock or austin) */
       var district_information = _.findWhere(Districts, {name: this.district });
