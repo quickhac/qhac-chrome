@@ -5,16 +5,14 @@
 angular.module('myApp.controllers', []).
   // see partial login.html
   controller('LoginController', ['$scope', 'UserService', '$location', '$rootScope', function($scope, UserService, $location, $rootScope) {
-    $scope.district_mapping = { 'Round Rock ISD': 'roundrock', 'Austin ISD': 'austin' };
-    $scope.districts = ['Round Rock ISD' , 'Austin ISD'];
-    $scope.message = "";
+    $scope.districts = _.map(Districts, function(district_obj) { return district_obj.name; })
     $scope.submit = function() {
       /* district_information is the whole district object, however, we just want to persist the basic name (roundrock or austin) */
-      var district_information = Districts[this.district_mapping[this.district]];
+      var district_information = _.findWhere(Districts, {name: this.district });
       var id = this.id; // look at the HTML: this magically appears from there
       var username = this.username;
       var password = this.password;
-      var district = this.district
+      var district = this.district;
       var _this = this;
       $rootScope.gs = new GradeService();
       $rootScope.gs.ready().then(function() {
@@ -54,6 +52,7 @@ angular.module('myApp.controllers', []).
     $scope.viewDetailed = function(course_id) {
       UserService.getInformationSpecificCycleCourse($scope.user_id, course_id, $scope.cycle_number, function(data) {
         console.log(data);
+        console.log(course_id);
         $scope.course_data = data;
         $scope.current_course = course_id;
       });
